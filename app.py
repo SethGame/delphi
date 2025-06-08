@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import os
 from openai import AsyncAzureOpenAI
 from azure.identity import EnvironmentCredential, get_bearer_token_provider
 import chainlit as cl
@@ -21,17 +22,19 @@ class AppConfig:
         set_tracing_disabled(True)
 
 
-async def agent_with_mcp(tools=None, mcp_servers: MCPServer = None):
-    if tools is None:
-        tools = []
+async def agent_with_mcp(mcp_servers: MCPServer = None):
     if mcp_servers is None:
-        mcp_servers = []
+        mcp_servers = [
+            MCPServer(
+                name="openai",
+                url="https://api.openai.com/v1/mcp/server",
+            )
+        ]
 
     agent = Agent(
         name="apollo",
         instructions="A helpful assistant that can answer questions",
-        model="o3", #os.getenv("AZURE_OPENAI_DEPLOYMENT"),
-        tools=tools,
+        model=os.getenv("AZURE_OPENAI_DEPLOYMENT"),
         mcp_servers=mcp_servers,
     )
     return agent
