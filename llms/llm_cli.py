@@ -20,6 +20,7 @@ Usage:
 Run the script directly. Generated scripts will be saved in the current directory.
 """
 
+import os
 from openai import AzureOpenAI
 from azure.identity import EnvironmentCredential, get_bearer_token_provider
 
@@ -49,10 +50,7 @@ def generate_completion(token_provider, llm_model, user_input_prompt):
                 "role": "system",
                 "content": "You are a historian. You are given a list of divisions of armies in WW2. You are to generate a name for each division.",
             },
-            {
-                "role": "user",
-                "content": user_input_prompt
-            }, 
+            {"role": "user", "content": user_input_prompt},
         ],
     )
     return completion
@@ -76,8 +74,12 @@ def main():
         for idx, prompt in enumerate(prompts_list, 1):
             print(f"Model: {model}, Prompt {idx}")
             completion = generate_completion(token_provider, model, prompt)
-            print(f"\n{completion.choices[0].message.content}\n")
+            print(
+                f"\n{completion.choices[0].message.content}\n"
+            )  # Ensure output directory exists
+            os.makedirs("./output", exist_ok=True)
 
+            # Save response to file (will overwrite if exists)
             filename = f"./output/division_name_{model}_prompt{idx}.txt"
             with open(filename, "w", encoding="utf-8") as file:
                 file.write(completion.choices[0].message.content)
