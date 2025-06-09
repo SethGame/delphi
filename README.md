@@ -1,6 +1,8 @@
 # delphi
 my own Prophet solution 
 
+![Delphi Oracle Scene](img/image.png)
+
 ## Goal
 * web app with chainlit
 
@@ -10,3 +12,4 @@ my own Prophet solution
 * Azure OpenAi - credential managed .env file
     * Enable MCP use 
 *   **Agent Development Framework:** OpenAI Agent SDK
+

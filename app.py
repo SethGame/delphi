@@ -95,6 +95,8 @@ async def on_mcp(connection, session: ClientSession):
             for t in result.tools
         ]
 
+        print(tools)
+
         mcp_tools_cache[connection.name] = tools
 
         mcp_tools = cl.user_session.get("mcp_tools", {})
