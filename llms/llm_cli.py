@@ -48,7 +48,14 @@ def generate_completion(token_provider, llm_model, user_input_prompt):
         messages=[
             {
                 "role": "system",
-                "content": "You are a historian. You are given a list of divisions of armies in WW2. You are to generate a name for each division.",
+                "content": (
+                    "You are a Historian. "
+                    "You are given a country name, corresponding location, and type of armed forces "
+                    "(e.g. army, navy). "
+                    "You are to generate an army group/navy squadron name for that country in its corresponding "
+                    "language but romanized if possible. "
+                    "If there was a historical name, use that instead."
+                )
             },
             {"role": "user", "content": user_input_prompt},
         ],
@@ -58,16 +65,26 @@ def generate_completion(token_provider, llm_model, user_input_prompt):
 
 def main():
     token_provider = get_token_provider()
-    llm_model_list = ["gpt-4o", "gpt-4.1"]
+    llm_model_list = ["gpt-4o", "gpt-4.1", "o3"]
+
+    # Clear output directory
+    output_dir = "./output"
+    if os.path.exists(output_dir):
+        for file in os.listdir(output_dir):
+            file_path = os.path.join(output_dir, file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+    else:
+        os.makedirs(output_dir)
 
     prompts_list = [
-        "Generate name of division of Italian army in WW2",
-        "Generate name of division of German army in WW2",
-        "Generate name of division of Russian army in WW2",
-        "Generate name of division of French army in WW2",
-        "Generate name of division of British army in WW2",
-        "Generate name of division of American army in WW2",
-        "Generate name of division of Japanese army in WW2",
+        "Germany, North Africa, Army"
+        "Germany, North Sea, Navy"
+        "Japan, South China Sea, Navy"
+        "Roman Empire, Albania, Army"
     ]
 
     for model in llm_model_list:
@@ -80,7 +97,7 @@ def main():
             os.makedirs("./output", exist_ok=True)
 
             # Save response to file (will overwrite if exists)
-            filename = f"./output/division_name_{model}_prompt{idx}.txt"
+            filename = f"./output/hoi4_name_{model}_prompt{idx}.txt"
             with open(filename, "w", encoding="utf-8") as file:
                 file.write(completion.choices[0].message.content)
 
