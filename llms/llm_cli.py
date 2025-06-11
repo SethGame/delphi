@@ -54,6 +54,7 @@ def generate_completion(token_provider, llm_model, user_input_prompt):
                     "(e.g. army, navy). "
                     "You are to generate an army group/navy squadron name for that country in its corresponding "
                     "language but romanized if possible. "
+                    "No other text should be generated. "
                     "If there was a historical name, use that instead."
                 )
             },
@@ -81,25 +82,25 @@ def main():
         os.makedirs(output_dir)
 
     prompts_list = [
-        "Germany, North Africa, Army"
-        "Germany, North Sea, Navy"
-        "Japan, South China Sea, Navy"
-        "Roman Empire, Albania, Army"
+        "Carthage, North Africa, Army",
+        "Roman Empire, Albania, Army",
+        "Mongol Empire, Manchuria, Army"
     ]
 
     for model in llm_model_list:
-        for idx, prompt in enumerate(prompts_list, 1):
-            print(f"Model: {model}, Prompt {idx}")
-            completion = generate_completion(token_provider, model, prompt)
-            print(
-                f"\n{completion.choices[0].message.content}\n"
-            )  # Ensure output directory exists
-            os.makedirs("./output", exist_ok=True)
-
-            # Save response to file (will overwrite if exists)
-            filename = f"./output/hoi4_name_{model}_prompt{idx}.txt"
-            with open(filename, "w", encoding="utf-8") as file:
-                file.write(completion.choices[0].message.content)
+        # Create a single file for each model
+        filename = f"./output/hoi4_names_{model}.txt"
+        with open(filename, "w", encoding="utf-8") as file:
+            for idx, prompt in enumerate(prompts_list, 1):
+                print(f"Model: {model}, Prompt {idx}")
+                completion = generate_completion(token_provider, model, prompt)
+                response = completion.choices[0].message.content
+                print(f"\n{response}\n")
+                
+                # Write prompt and response to file
+                file.write(f"Prompt {idx}: {prompt}\n")
+                file.write(f"Response: {response}\n")
+                file.write("-" * 50 + "\n")  # Add separator between entries
 
 
 if __name__ == "__main__":
