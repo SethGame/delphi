@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Delphi Project Overview
+
+## About Delphi
+Delphi is an AI-powered web application that serves as a "Prophet solution" using Chainlit for the web interface and Azure OpenAI for AI capabilities. The project integrates MCP (Model Context Protocol) servers and supports multiple LLM providers.
+
+## Key Components
+
+### Main Application
+- [app.py](mdc:app.py) - Main Chainlit application with MCP integration
+- [chainlit.md](mdc:chainlit.md) - Welcome screen configuration for the web UI
+
+### LLM Module
+- [llms/llm_cli.py](mdc:llms/llm_cli.py) - CLI interface supporting Azure OpenAI and Google Gemini
+- [llms/README.md](mdc:llms/README.md) - Documentation for the LLM module
+
+### Configuration
+- [pyproject.toml](mdc:pyproject.toml) - Python project dependencies and metadata
+- `.env` file - Environment variables for API keys and configuration (not in repo)
+
+### Output
+- `output/` directory - Generated completions and results from LLM operations
+
+## Architecture
+The application follows a modular design:
+1. **Web Interface** (Chainlit) - User interaction through chat interface
+2. **Agent Framework** (OpenAI Agents SDK) - Manages AI agents with MCP support
+3. **LLM Providers** - Supports both Azure OpenAI and Google Gemini
+4. **MCP Integration** - Connects to external MCP servers for enhanced capabilities
+

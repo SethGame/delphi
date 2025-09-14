@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# MCP (Model Context Protocol) Integration
+
+## MCP Server Management
+The project supports MCP servers for extending agent capabilities. Key integration points in [app.py](mdc:app.py):
+
+### MCP Server Configuration
+```python
+mcp_servers = [
+    MCPServer(
+        name="openai", 
+        url="https://api.openai.com/v1/mcp/server",
+    )
+]
+```
+
+### MCP Event Handlers
+- `@cl.on_mcp_connect` - Handles new MCP server connections
+- `@cl.on_mcp_disconnect` - Handles MCP server disconnections
+- Tool discovery happens automatically on connection
+
+### MCP Tools Caching
+- Global `mcp_tools_cache` stores tools across sessions
+- Per-session `mcp_tools` in user session for active tools
+- Tools are listed and cached when MCP servers connect
+
+### Agent MCP Integration
+Agents are configured with MCP servers:
+```python
+agent = Agent(
+    name="apollo",
+    instructions="A helpful assistant that can answer questions", 
+    model=os.getenv("AZURE_OPENAI_DEPLOYMENT"),
+    mcp_servers=mcp_servers,  # MCP servers attached here
+)
+```
+
+## Tool Streaming
+The application supports streaming of:
+- Tool calls: `await mgs.stream_tool_calls(event.data.tool_calls)`
+- Tool results: `await mgs.stream_tool_result(event.data.tool_result)`
+
+## Adding New MCP Servers
+To add new MCP servers, modify the `agent_with_mcp()` function in [app.py](mdc:app.py) and add new `MCPServer` instances to the list.
+
+

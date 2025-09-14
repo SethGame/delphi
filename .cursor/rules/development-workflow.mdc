@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Development Workflow
+
+## Getting Started
+1. Set up environment variables in `.env` file (copy from `.env-example`)
+2. Install dependencies: `uv sync` or `pip install -e .`
+3. Run the Chainlit app: `python app.py` or `chainlit run app.py`
+
+## Key Development Files
+
+### Main Development
+- [app.py](mdc:app.py) - Core Chainlit application logic
+  - Contains chat handlers, MCP integration, and agent setup
+  - Modify here for UI behavior and agent interactions
+
+### LLM Operations
+- [llms/llm_cli.py](mdc:llms/llm_cli.py) - Command-line LLM interface
+  - Supports both Azure OpenAI and Google Gemini
+  - Use for batch processing and testing LLM responses
+  - Run with: `python llms/llm_cli.py`
+
+### Configuration Management
+- [pyproject.toml](mdc:pyproject.toml) - Manage Python dependencies
+- `.env` file - Configure API keys and environment settings
+
+## Environment Variables
+- `AZURE_OPENAI_DEPLOYMENT` - Azure OpenAI model deployment name
+- `GEMINI_API_KEY` - Google Gemini API key
+- `LLM_PROVIDER` - Choose between "azure_openai" or "gemini"
+
+## Testing Workflow
+1. Test LLM functionality: `python llms/llm_cli.py`
+2. Test web interface: `chainlit run app.py`
+3. Check outputs in `output/` directory
+
+
